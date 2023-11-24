@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "yvwto4K6bdcfRpeI6q0IPaw0MCxvEgjoFrGTeuQm11rVK3MS/R4q0lBbQ6Jth/2PFxBRGufroqvMG/uKvcr9Eg==",
+  "dgSpecHash": "/7piQKe/DvoieTj/ejBqdkYyMqQ6LRgaKEi8q0beFwL9emKCI7K1JtN8SWGojjVf5NV1dRuZsi9BrJa6R5Z+cQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\victo\\RiderProjects\\Hydra\\Hydra.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\victo\\RiderProjects\\hydra-toolkit\\Hydra.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\victo\\.nuget\\packages\\system.configuration.configurationmanager\\8.0.0\\system.configuration.configurationmanager.8.0.0.nupkg.sha512",
+    "C:\\Users\\victo\\.nuget\\packages\\system.diagnostics.eventlog\\8.0.0\\system.diagnostics.eventlog.8.0.0.nupkg.sha512",
+    "C:\\Users\\victo\\.nuget\\packages\\system.diagnostics.performancecounter\\8.0.0\\system.diagnostics.performancecounter.8.0.0.nupkg.sha512",
+    "C:\\Users\\victo\\.nuget\\packages\\system.security.cryptography.protecteddata\\8.0.0\\system.security.cryptography.protecteddata.8.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
