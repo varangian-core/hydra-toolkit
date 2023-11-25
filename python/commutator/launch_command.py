@@ -2,44 +2,47 @@
 import subprocess
 import sys
 
-
-#For now this python command_launch.py config.yaml command_query.py
-
-
 def create_seq_command_from_yaml(yaml_file):
-    with open(yaml_file, 'r') as file:
+    with open(yaml_file, 'r', encoding='utf-8-sig') as file:
         config = yaml.safe_load(file)
 
-    seq_commands = []
     args = []
+    seq = config.get('seq', '')  # Get the sequence string directly
 
-    # Check each key and build the command
     for key, value in config.items():
-        if value:
-            seq_commands.append(key[0])  # Assuming the first letter is the command
+        if key == 'seq':
+            continue  # Skip the 'seq' key since it's handled separately
+        if isinstance(value, list):
+            for item in value:
+                args.append(f'--{key} "{item}"')
+        elif isinstance(value, bool):
+            if value:
+                args.append(f'--{key}')
+        else:
+            args.append(f'--{key} "{value}"')
 
-            # Handle multiple contents
-            if key == 'content' and isinstance(value, list):
-                for content in value:
-                    args.append(f'--{key} "{content}"')
-            else:
-                args.append(f'--{key} "{value}"')
-
-    return ' '.join(args), '|'.join(seq_commands)
+    return ' '.join(args), seq
 
 def main():
-    if len(sys.argv) != 3:
-        print("Usage: python launch_command_from_yaml.py <yaml_file> <python_script>")
+    default_python_script = 'command_query.py'  # Set the default script name
+
+    if len(sys.argv) < 2:
+        print(f"Usage: python launch_command_from_yaml.py <yaml_file1> <yaml_file2> ... [python_script]")
+        print(f"If no python_script is specified, {default_python_script} will be used.")
         sys.exit(1)
 
-    yaml_file = sys.argv[1]
-    python_script = sys.argv[2]
+    if len(sys.argv) > 2 and sys.argv[-1].endswith('.py'):
+        python_script = sys.argv[-1]  
+        yaml_files = sys.argv[1:-1]
+    else:
+        python_script = default_python_script
+        yaml_files = sys.argv[1:]
 
-    args, seq = create_seq_command_from_yaml(yaml_file)
-    full_command = f'python {python_script} {args} -seq "{seq}"'
-
-    # Execute the Python script with the constructed command
-    subprocess.run(full_command, shell=True)
+    for yaml_file in yaml_files:
+        args, seq = create_seq_command_from_yaml(yaml_file)
+        full_command = f'python {python_script} {args} -seq "{seq}"'  # Correctly formatted command
+        print(f"Executing: {full_command}")
+        subprocess.run(full_command, shell=True)
 
 if __name__ == "__main__":
     main()

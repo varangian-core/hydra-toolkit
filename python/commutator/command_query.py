@@ -105,7 +105,7 @@ parser.add_argument('-o', '--output', type=str, help='File path for writing the 
 parser.add_argument('-s', '--suppress', action='store_true', help='Suppress printing of the output to the terminal')
 parser.add_argument('--clean', action='store_true', help='Clear the chat history')
 parser.add_argument('-w', '--website', type=str, help='URL of the website to scrape')
-parser.add_argument('-seq', type=str, help="Execute a sequence of commands")
+parser.add_argument('--sequence', '-seq', type=str, help="Execute a sequence of commands")
 args = parser.parse_args()
 
 # Define the API endpoint and headers
@@ -129,8 +129,8 @@ else:
 
 # Execute functions based on the --seq argument
 content_index = 0
-if args.seq:
-    seq_commands = args.seq.split('|')
+if args.sequence:
+    seq_commands = args.sequence.split('|')
     for command in seq_commands:
         if command == 'c' and args.content and content_index < len(args.content):
             handle_content(args.content[content_index])
@@ -152,7 +152,7 @@ if args.seq:
             break
 
 # Handle arguments if --seq is not used
-if not args.seq:
+if not args.sequence:
     if args.website:
         handle_website(args.website)
     if args.buffer:
