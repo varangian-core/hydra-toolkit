@@ -1,14 +1,22 @@
-﻿using DefaultNamespace;
-using System;
+﻿using System;
 
-class Program
+namespace HydraToolkit
 {
-    static async Task Main(string[] args)
+    class Program
     {
-        bool isPort5000Open = await HealthCheck.IsPortOpen("localhost", 5000);
-        Console.WriteLine($"Port 5000 is {(isPort5000Open ? "open" : "closed")}.");
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hydra Command Line Tool");
+            while (true)
+            {
+                Console.Write("> ");
+                string input = Console.ReadLine();
 
-        bool isPort7160Open = await HealthCheck.IsPortOpen("localhost", 7160);
-        Console.WriteLine($"Port 7160 is {(isPort7160Open ? "open" : "closed")}.");
+                if (string.IsNullOrEmpty(input)) continue;
+                if (input.Equals("exit", StringComparison.OrdinalIgnoreCase)) break;
+
+                CommandHandler.HandleCommand(input);
+            }
+        }
     }
 }
