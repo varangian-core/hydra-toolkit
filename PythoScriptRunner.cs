@@ -2,19 +2,22 @@
 {
     public static class PythonScriptRunner
     {
-        public static void RunCommandQuery()
+        public static void RunCommandQuery(IConfiguration configuration)
         {
-            ProcessUtility.ExecuteCommand(@"python C:\path\to\command_query.py");
+            string commandQueryScriptPath = configuration["PythonScriptPaths:CommandQueryScriptPath"];
+            ProcessUtility.ExecuteCommand($"python {commandQueryScriptPath}");
         }
 
-        public static void RunLaunchCommand(string instructionPath)
+        public static void RunLaunchCommand(IConfiguration configuration, string instructionPath)
         {
             if (string.IsNullOrEmpty(instructionPath))
             {
                 Console.WriteLine("Instruction path is required.");
                 return;
             }
-            ProcessUtility.ExecuteCommand($@"python C:\path\to\launch_command.py {instructionPath} command_query.py");
+
+            string launchCommandScriptPath = configuration["PythonScriptPaths:LaunchCommandScriptPath"];
+            ProcessUtility.ExecuteCommand($"python {launchCommandScriptPath} {instructionPath} command_query.py");
         }
     }
 }
