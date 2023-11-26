@@ -1,11 +1,16 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration; 
 
 namespace HydraToolkit
 {
     public static class CommandHandler
     {
-        public static void HandleCommand(string command)
+        private static IConfiguration _configuration; 
+
+        public static void HandleCommand(string command, IConfiguration configuration)
         {
+            _configuration = configuration;
+
             string[] parts = command.Split(' ');
             switch (parts[0].ToLower())
             {
@@ -16,10 +21,11 @@ namespace HydraToolkit
                     CondaManager.ActivateEnvironment();
                     break;
                 case "run-command-query":
-                    PythonScriptRunner.RunCommandQuery();
+                    PythonScriptRunner.RunCommandQuery(_configuration);
                     break;
                 case "run-launch-command":
-                    PythonScriptRunner.RunLaunchCommand(parts.Length > 1 ? parts[1] : null);
+                    string instructionPath = parts.Length > 1 ? parts[1] : null;
+                    PythonScriptRunner.RunLaunchCommand(_configuration, instructionPath);
                     break;
                 default:
                     Console.WriteLine("Unknown command.");

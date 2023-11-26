@@ -1,4 +1,6 @@
-﻿namespace HydraToolkit
+﻿using Microsoft.Extensions.Configuration;
+
+namespace HydraToolkit
 {
     public static class PythonScriptRunner
     {
