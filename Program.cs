@@ -24,7 +24,7 @@ namespace HydraToolkit
                 if (string.IsNullOrEmpty(input)) continue;
                 if (input.Equals("exit", StringComparison.OrdinalIgnoreCase)) break;
 
-                CommandHandler.HandleCommand(input, Configuration); // Passing Configuration to HandleCommand
+                CommandHandler.HandleCommand(input, Configuration); 
             }
         }
     }
