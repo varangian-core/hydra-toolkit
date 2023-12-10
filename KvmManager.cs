@@ -8,16 +8,17 @@ using System.Security;
 
 public class KvmManager
 {
-    private SecureString password; 
+    private SecureString password;
 
     public KvmManager(SecureString password)
     {
-        this.password = password; 
+        this.password = password;
     }
 
     private string ExecuteSshCommand(string remoteHost, string username, string command)
     {
-        using (var sshClient = new SshClient(remoteHost, username, new NetworkCredential(string.Empty, password).Password)) 
+        using (var sshClient =
+               new SshClient(remoteHost, username, new NetworkCredential(string.Empty, password).Password))
         {
             sshClient.Connect();
             var sshCommand = sshClient.RunCommand(command);
@@ -33,7 +34,7 @@ public class KvmManager
         var result = ExecuteSshCommand(remoteHost, username, command);
 
         int numOfSupportedProcesses;
-        if(int.TryParse(result, out numOfSupportedProcesses))
+        if (int.TryParse(result, out numOfSupportedProcesses))
         {
             return numOfSupportedProcesses > 0;
         }
@@ -42,3 +43,5 @@ public class KvmManager
             // handle improperly formatted response
             throw new Exception("Could not parse the response from the remote host.");
         }
+    }
+}
