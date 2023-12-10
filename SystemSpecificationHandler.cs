@@ -1,9 +1,16 @@
 ﻿namespace Hydra;
 
-  public class SystemSpecificationHandler
+/// <summary>
+/// The SystemSpecificationHandler class is responsible for checking hardware specifications of a remote host using SSH commands.
+/// </summary>
+public class SystemSpecificationHandler
     {
         private readonly ISshCommandStrategy sshCommandStrategy;
 
+        /// <summary>
+        /// Initializes a new instance of the SystemSpecificationHandler class with the specified SSH command strategy.
+        /// </summary>
+        /// <param name="sshCommandStrategy">The SSH command strategy to use for executing commands.</param>
         public SystemSpecificationHandler(ISshCommandStrategy sshCommandStrategy)
         {
             this.sshCommandStrategy = sshCommandStrategy;
@@ -15,11 +22,11 @@
 
             var command = "free -m";
             var output = sshCommandStrategy.ExecuteSshCommand(remoteHost, username, command);
-            result.MemoryInfo = output; // Add this line
+            result.MemoryInfo = output; 
             
             command = "nproc";
             output = sshCommandStrategy.ExecuteSshCommand(remoteHost, username, command);
-            result.ProcessorCount = output; // Add this line
+            result.ProcessorCount = output; 
             
             command = "cat /proc/cpuinfo"; 
             output = sshCommandStrategy.ExecuteSshCommand(remoteHost, username, command);
@@ -27,17 +34,15 @@
 
             command = "uname -a";
             output = sshCommandStrategy.ExecuteSshCommand(remoteHost, username, command);
-            result.NodeInfo = output; // Add this line
+            result.NodeInfo = output; 
 
             command = "virsh version";
             output = sshCommandStrategy.ExecuteSshCommand(remoteHost, username, command);
-            result.LibvirtInfo = output;  // Add this line
+            result.LibvirtInfo = output;  
 
             command = "ovs-vsctl version";
             output = sshCommandStrategy.ExecuteSshCommand(remoteHost, username, command);
-            result.OvsInfo = output; // Add this line
-
-            // All node, libvirt, and OVS checks are now implemented using the "sshCommandStrategy.ExecuteSshCommand" method.
+            result.OvsInfo = output; 
 
             return result;
         }

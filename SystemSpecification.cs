@@ -1,5 +1,8 @@
 ﻿namespace Hydra
 {
+    /// <summary>
+    /// Represents a system specification containing information about the memory, processor, node, libvirt, and OVS.
+    /// </summary>
     public class SystemSpecification
     {
         public string MemoryInfo { get; set; }
