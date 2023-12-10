@@ -1,47 +1,75 @@
 ﻿using System.Net;
-
-namespace Hydra;
-using System;
-using Renci.SshNet;
-using System.IO;
 using System.Security;
+using Renci.SshNet;
 
-public class KvmManager
+namespace Hydra
 {
-    private SecureString password;
-
-    public KvmManager(SecureString password)
+    public class KvmManager : IVirtualizationManager
     {
-        this.password = password;
-    }
-
-    private string ExecuteSshCommand(string remoteHost, string username, string command)
-    {
-        using (var sshClient =
-               new SshClient(remoteHost, username, new NetworkCredential(string.Empty, password).Password))
+        private SecureString password;
+        public KvmManager(SecureString password)
         {
-            sshClient.Connect();
-            var sshCommand = sshClient.RunCommand(command);
-            sshClient.Disconnect();
-
-            return sshCommand.Result;
+            this.password = password;
         }
-    }
 
-    public bool CheckKvmSupport(string remoteHost, string username)
-    {
-        var command = $"egrep -c '(vmx|svm)' /proc/cpuinfo";
-        var result = ExecuteSshCommand(remoteHost, username, command);
-
-        int numOfSupportedProcesses;
-        if (int.TryParse(result, out numOfSupportedProcesses))
+        public bool InstallTools(string remoteHost, string username)
         {
-            return numOfSupportedProcesses > 0;
+            throw new NotImplementedException();
         }
-        else
+
+        public bool CreateVirtualMachine(string remoteHost, string username, string vmName)
         {
-            // handle improperly formatted response
-            throw new Exception("Could not parse the response from the remote host.");
+            throw new NotImplementedException();
+        }
+
+        public bool StartVirtualMachine(string remoteHost, string username, string vmName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool StopVirtualMachine(string remoteHost, string username, string vmName)
+        {
+            throw new NotImplementedException();
+        }
+
+        string IVirtualizationManager.ExecuteSshCommand(string remoteHost, string username, string command)
+        {
+            return ExecuteSshCommand(remoteHost, username, command);
+        }
+
+        private string ExecuteSshCommand(string remoteHost, string username, string command)
+        {
+            try
+            {
+                using (var sshClient = new SshClient(remoteHost, username, new NetworkCredential(string.Empty, this.password).Password))
+                {
+                    sshClient.Connect();
+                    var sshCommand = sshClient.RunCommand(command);
+                    sshClient.Disconnect();
+
+                    return sshCommand.Result;
+                }
+            }
+            catch (Exception ex)
+            {
+                // This is a basic handling, you can extend it according to your needs.
+                throw new InvalidOperationException("There was a problem executing the SSH command.", ex);
+            }
+        }
+
+        public bool CheckKvmSupport(string remoteHost, string username)
+        {
+            var command = $"egrep -c '(vmx|svm)' /proc/cpuinfo";
+            var result = ExecuteSshCommand(remoteHost, username, command);
+
+            if (int.TryParse(result, out int numOfSupportedProcesses))
+            {
+                return numOfSupportedProcesses > 0;
+            }
+            else
+            {
+                throw new ArgumentException($"The server response could not be parsed into an integer: {result}");
+            }
         }
     }
 }
