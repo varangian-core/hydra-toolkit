@@ -1,9 +1,0 @@
-﻿model: "TheBloke_WizardCoder-Python-34B-V1.0-GPTQ"
-content:
-  - "First message content"
-  - "Second message content"
-buffer: "path/to/buffer_file.txt"
-output: "path/to/output_file.txt"
-suppress: false
-clean: true
-website: "http://example.com"
