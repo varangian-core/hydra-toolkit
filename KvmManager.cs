@@ -1,15 +1,17 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Security;
 using Renci.SshNet;
 
 namespace Hydra
 {
-    public class KvmManager : IVirtualizationManager
+    public class KvmManager : IVirtualizationManager, ISshCommandStrategy
     {
         private SecureString password;
+
         public KvmManager(SecureString password)
         {
-            this.password = password;
+            this.password = password ?? throw new ArgumentNullException(nameof(password), "Password cannot be null.");
         }
 
         public bool InstallTools(string remoteHost, string username)
@@ -37,8 +39,23 @@ namespace Hydra
             return ExecuteSshCommand(remoteHost, username, command);
         }
 
-        private string ExecuteSshCommand(string remoteHost, string username, string command)
+        public string ExecuteSshCommand(string remoteHost, string username, string command)
         {
+            if (string.IsNullOrWhiteSpace(remoteHost))
+            {
+                throw new ArgumentNullException(nameof(remoteHost), "Remote Host cannot be null or whitespace.");
+            }
+
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentNullException(nameof(username), "Username cannot be null or whitespace.");
+            }
+
+            if (string.IsNullOrWhiteSpace(command))
+            {
+                throw new ArgumentNullException(nameof(command), "Command cannot be null or whitespace.");
+            }
+
             try
             {
                 using (var sshClient = new SshClient(remoteHost, username, new NetworkCredential(string.Empty, this.password).Password))
@@ -52,14 +69,14 @@ namespace Hydra
             }
             catch (Exception ex)
             {
-                // This is a basic handling, you can extend it according to your needs.
-                throw new InvalidOperationException("There was a problem executing the SSH command.", ex);
+                throw new InvalidOperationException($"There was a problem executing the SSH command: {command}", ex);
             }
         }
 
         public bool CheckKvmSupport(string remoteHost, string username)
         {
             var command = $"egrep -c '(vmx|svm)' /proc/cpuinfo";
+
             var result = ExecuteSshCommand(remoteHost, username, command);
 
             if (int.TryParse(result, out int numOfSupportedProcesses))
@@ -68,7 +85,7 @@ namespace Hydra
             }
             else
             {
-                throw new ArgumentException($"The server response could not be parsed into an integer: {result}");
+                throw new ArgumentException($"The server response, '{result}', could not be parsed into an integer. Command: '{command}'");
             }
         }
     }
