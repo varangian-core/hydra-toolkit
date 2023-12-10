@@ -1,0 +1,48 @@
+# .NET Core / .NET Standard / .NET Framework artifacts
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.cache
+*.dbmdl
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# Packages Directory
+**/packages/*
+
+# JetBrains Rider
+.idea
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Test Results
+**/*.trx
+**/*.TestResults
+*.coverage
+coverage/
+
+# Project state
+.build/
+
+# Miscellaneous
+*.pidb
+*.scc
+*.bak
+Thumbs.db
+*.swp
+*.swo
