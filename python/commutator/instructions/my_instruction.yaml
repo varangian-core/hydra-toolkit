@@ -1,0 +1,5 @@
+﻿sequence: "c|c|w"
+content:
+  - "Content 1"
+  - "Content 2"
+website: "https://google.com"

@@ -1,0 +1,57 @@
+﻿# Default ignore for .NET
+bin/
+obj/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.pidb
+*.cache
+*.vs/
+*.vscode/
+*.nupkg
+# Ignore the local Azure Functions process.settings file
+local.settings.json
+
+# Rider-specific (JetBrains)
+.idea/
+
+# Exclude .github workflows directory
+.github/
+
+# Exclude any file that might contain sensitive data
+**/appsettings*.json
+**/secrets.json
+
+# Exclude any NuGet Packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/[Pp]ackages/
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
+
+# Enable "build/" folder in the NuGet Packages folder
+!**/[Pp]ackages/build/
+
+# Exclude MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Exclude NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+
+# Exclude other miscellaneous files
+*.[Cc]ache
+ClientBin/
+[Ss]tyle[Cc]op.*
+~$*
+*~
+*.dbmdl
+*.dbproj.schemaview
+*.pfx
+*.publishsettings
+*.psess
+*.vsp
+*.vspx
+*.vsess
