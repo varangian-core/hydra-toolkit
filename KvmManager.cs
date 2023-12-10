@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace HydraToolkit;
+namespace Hydra;
 using System;
 using Renci.SshNet;
 using System.IO;

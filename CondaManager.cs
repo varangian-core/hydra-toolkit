@@ -1,4 +1,4 @@
-﻿namespace HydraToolkit
+﻿namespace Hydra
 {
     public static class CondaManager
     {

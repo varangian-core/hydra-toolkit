@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace HydraToolkit
+namespace Hydra
 {
     class Program
     {

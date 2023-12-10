@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace HydraToolkit
+namespace Hydra
 {
     public static class ProcessUtility
     {
