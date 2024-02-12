@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration; 
 
-namespace HydraToolkit
+namespace Hydra
 {
     public static class CommandHandler
     {

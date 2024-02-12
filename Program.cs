@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace HydraToolkit
+namespace Hydra
 {
     class Program
     {

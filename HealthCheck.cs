@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-namespace HydraToolkit
+namespace Hydra
 {
     public class HealthCheck
     {
