@@ -1,25 +1,46 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace HydraToolkit
 {
     public static class ProcessUtility
     {
-        public static void ExecuteCommand(string command)
+        public static string ExecuteCommand(string command)
         {
-            ProcessStartInfo processStartInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
+            var shell = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "cmd.exe" : "/bin/bash";
+            var argument = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "/c" : "-c";
+            
+            ProcessStartInfo processStartInfo = new ProcessStartInfo(shell, $"{argument} {command}")
             {
                 RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
 
-            using (Process process = new Process { StartInfo = processStartInfo })
+            try
             {
-                process.Start();
-                string result = process.StandardOutput.ReadToEnd();
-                process.WaitForExit();
-                Console.WriteLine(result);
+                using (Process process = new Process { StartInfo = processStartInfo })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+                    process.WaitForExit();
+
+
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        throw new InvalidOperationException($"Command execution resulted in an error: {error}");
+                    }
+
+                    return output;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine($"Failed to execute command '{command}'. Error: {e.Message}");
+                return string.Empty;
             }
         }
     }

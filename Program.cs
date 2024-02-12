@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.Configuration;
-using System.IO;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace HydraToolkit
 {
@@ -14,7 +12,7 @@ namespace HydraToolkit
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
-            
+
             Console.WriteLine("Hydra Command Line Tool");
             while (true)
             {
@@ -24,8 +22,11 @@ namespace HydraToolkit
                 if (string.IsNullOrEmpty(input)) continue;
                 if (input.Equals("exit", StringComparison.OrdinalIgnoreCase)) break;
 
-                CommandHandler.HandleCommand(input, Configuration); 
+                CommandHandler.HandleCommand(input, Configuration);
+
             }
+
         }
     }
 }
+

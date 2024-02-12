@@ -45,6 +45,7 @@ namespace HydraToolkit
             Console.WriteLine("  conda-activate - Activates the Conda environment.");
             Console.WriteLine("  run-command-query - Runs a Python command query script.");
             Console.WriteLine("  run-launch-command [instructionPath] - Runs a Python launch command script with the specified instruction path.");
+            Console.WriteLine("  exit - Exits the application.");
         }
 
     }
