@@ -1,4 +1,6 @@
-﻿namespace HydraToolkit.orchestration;
+﻿using Hydra;
+
+namespace HydraToolkit.orchestration;
 
 public class CondaEnvironmentProvisioner
 {

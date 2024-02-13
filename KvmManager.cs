@@ -1,5 +1,5 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
+using System.Runtime.InteropServices;
 using System.Security;
 using Renci.SshNet;
 
@@ -58,7 +58,7 @@ namespace Hydra
 
             try
             {
-                using (var sshClient = new SshClient(remoteHost, username, new NetworkCredential(string.Empty, this.password).Password))
+                using (var sshClient = new SshClient(remoteHost, username, ConvertToUNSecureString(this.password)))
                 {
                     sshClient.Connect();
                     var sshCommand = sshClient.RunCommand(command);
@@ -86,6 +86,23 @@ namespace Hydra
             else
             {
                 throw new ArgumentException($"The server response, '{result}', could not be parsed into an integer. Command: '{command}'");
+            }
+        }
+        
+        private string ConvertToUNSecureString(SecureString securePassword)
+        {
+            if (securePassword == null)
+                throw new ArgumentNullException("securePassword");
+
+            IntPtr unmanagedString = IntPtr.Zero;
+            try
+            {
+                unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
+                return Marshal.PtrToStringUni(unmanagedString);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
             }
         }
     }

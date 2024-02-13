@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text.Json.Serialization;
+using Hydra;
 using Newtonsoft.Json;
 
 namespace HydraToolkit.orchestration;
