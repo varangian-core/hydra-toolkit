@@ -16,6 +16,12 @@
         {
             string environmentName = "hydraDev";
             string pythonVersion = "3.10";
+            var checkEnvCommand = $"conda env list | grep {environmentName}";
+            var checkEnvResult = ProcessUtility.ExecuteCommand(checkEnvCommand);
+            if (!string.IsNullOrWhiteSpace(checkEnvResult))
+            {
+                throw new InvalidOperationException($"Environment '{environmentName}' already exists.");
+            }
             ProcessUtility.ExecuteCommand($"conda create --name {environmentName} python={pythonVersion} -y");
             Console.WriteLine($"Please activate the '{environmentName}' environment manually using: conda activate {environmentName}");
             ProcessUtility.ExecuteCommand($"conda install --name {environmentName} flask -y");
