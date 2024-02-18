@@ -1,4 +1,8 @@
-﻿namespace Hydra
+﻿using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
+namespace Hydra
 {
     public static class CondaManager
     {
@@ -9,23 +13,49 @@
 
         public static void ActivateEnvironment()
         {
-            ProcessUtility.ExecuteCommand("conda activate hydraEnv");
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Console.WriteLine("To activate the Conda environment on Windows, please use:");
+                Console.WriteLine("conda init powershell");
+            }
+            else
+            {
+                Console.WriteLine("To activate the Conda environment on Unix-like systems, please use:");
+                Console.WriteLine("source activate hydraEnv");
+            }
         }
 
         public static void SetupLocalDevEnvironment()
         {
             string environmentName = "hydraDev";
             string pythonVersion = "3.10";
-            var checkEnvCommand = $"conda env list | grep {environmentName}";
-            var checkEnvResult = ProcessUtility.ExecuteCommand(checkEnvCommand);
-            if (!string.IsNullOrWhiteSpace(checkEnvResult))
+            try
             {
-                throw new InvalidOperationException($"Environment '{environmentName}' already exists.");
+                var checkEnvCommand = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
+                                      $"conda env list | findstr {environmentName}" :
+                                      $"conda env list | grep {environmentName}";
+                var checkEnvResult = ProcessUtility.ExecuteCommand(checkEnvCommand);
+                if (!string.IsNullOrWhiteSpace(checkEnvResult))
+                {
+                    Console.WriteLine($"Environment '{environmentName}' already exists. Skipping creation.");
+                    return;
+                }
+
+                ProcessUtility.ExecuteCommand($"conda create --name {environmentName} python={pythonVersion} -y");
+                Console.WriteLine($"Environment '{environmentName}' created.");
+                Console.WriteLine("To activate this environment, run the following command:");
+                ActivateEnvironment();
+                ProcessUtility.ExecuteCommand($"conda install --name {environmentName} flask -y");
+                Console.WriteLine($"Local development environment '{environmentName}' has been set up with Python {pythonVersion}.");
             }
-            ProcessUtility.ExecuteCommand($"conda create --name {environmentName} python={pythonVersion} -y");
-            Console.WriteLine($"Please activate the '{environmentName}' environment manually using: conda activate {environmentName}");
-            ProcessUtility.ExecuteCommand($"conda install --name {environmentName} flask -y");
-            Console.WriteLine($"Local development environment '{environmentName}' has been set up with Python {pythonVersion}.");
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
         }
     }
 }
