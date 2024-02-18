@@ -1,4 +1,5 @@
-name: Qodana
+name: Qodana Python Analysis
+
 on:
   workflow_dispatch:
   pull_request:
@@ -8,7 +9,7 @@ on:
       - 'releases/*'
 
 jobs:
-  qodana:
+  qodana-python:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -17,9 +18,29 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
-          fetch-depth: 0  # a full history is required for pull request analysis
-      - name: 'Qodana Scan'
+          ref: ${{ github.event.pull_request.head.sha }}  # Check out the actual pull request commit, not the merge commit
+          fetch-depth: 0  # A full history is required for pull request analysis
+      
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'  # Specify the Python version you are using
+
+      - name: Cache Qodana
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.qodana
+          key: qodana-${{ runner.os }}-python-${{ hashFiles('**/*.py') }}
+          restore-keys: |
+            qodana-${{ runner.os }}-python-
+      
+      - name: 'Qodana Scan - Python'
         uses: JetBrains/qodana-action@v2023.3
+        with:
+          linter: "python"
+          project-dir: '/python' 
+          results-dir: 'qodana-results'
+          cache-dir: 'qodana-cache'
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
