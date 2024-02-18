@@ -16,7 +16,11 @@ namespace Hydra
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Console.WriteLine("To activate the Conda environment on Windows, please use:");
+                Console.WriteLine("conda activate hydraEnv");
+                
+                Console.WriteLine("If you are using PowerShell and haven't initialized Conda for it, please run:");
                 Console.WriteLine("conda init powershell");
+                Console.WriteLine("Then restart your PowerShell session before activating the environment.");
             }
             else
             {
@@ -31,9 +35,7 @@ namespace Hydra
             string pythonVersion = "3.10";
             try
             {
-                var checkEnvCommand = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
-                                      $"conda env list | findstr {environmentName}" :
-                                      $"conda env list | grep {environmentName}";
+                var checkEnvCommand = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? $"conda env list | findstr {environmentName}" : $"conda env list | grep {environmentName}";
                 var checkEnvResult = ProcessUtility.ExecuteCommand(checkEnvCommand);
                 if (!string.IsNullOrWhiteSpace(checkEnvResult))
                 {
@@ -45,6 +47,7 @@ namespace Hydra
                 Console.WriteLine($"Environment '{environmentName}' created.");
                 Console.WriteLine("To activate this environment, run the following command:");
                 ActivateEnvironment();
+
                 ProcessUtility.ExecuteCommand($"conda install --name {environmentName} flask -y");
                 Console.WriteLine($"Local development environment '{environmentName}' has been set up with Python {pythonVersion}.");
             }
