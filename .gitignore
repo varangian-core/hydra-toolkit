@@ -49,6 +49,6 @@ Thumbs.db
 *.swo
 
 
-QodanaResult/log/
-QodanaResult/projectStructure/
+QodanaResults/log/
+QodanaResults/projectStructure/
 QodanaResults/report/
