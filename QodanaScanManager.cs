@@ -13,6 +13,8 @@ public class QodanaScanManager
         _resultsDir = resultsDir;
     }
     
+    public string ResultsDir => _resultsDir;
+    
     public void RunScan()
     {
         string command = $"qodana scan --linter {_linter} --project-dir {_projectDir} --results-dir {_resultsDir}";
