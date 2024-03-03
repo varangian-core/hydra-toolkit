@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Security.AccessControl;
+using Microsoft.Extensions.Configuration;
 
 namespace Hydra
 {
@@ -8,10 +9,27 @@ namespace Hydra
 
         static void Main(string[] args)
         {
-            Configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .Build();
+            var projectDir = AppContext.BaseDirectory;
+            
+            //WARNING: These are the path locations for the python scripts. Please adjust, if paths are different.
+            var commandQueryScriptPath = Path.Combine(projectDir, "python", "command_query.py");
+            var launchCommandScriptPath = Path.Combine(projectDir, "python", "launch_command.py");
+            
+            var resultsDir = Path.Combine(projectDir, "QodanaResults");
+
+            var inMemorySettings = new Dictionary<string, string>
+            {
+                { "PythonScriptPaths:CommandQueryScriptPath", commandQueryScriptPath },
+                { "PythonScriptPaths:LaunchCommandScriptPath", launchCommandScriptPath },
+                { "Qodana:ProjectDir", projectDir },
+                { "Qodana:ResultsDir", resultsDir },
+            };
+            
+                Configuration = new ConfigurationBuilder()
+                    .SetBasePath(projectDir)
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .AddInMemoryCollection(inMemorySettings)
+                    .Build();
 
             Console.WriteLine("Hydra Command Line Tool");
             while (true)

@@ -102,6 +102,8 @@ namespace Hydra
             Console.WriteLine(" run-command-query - Runs a Python command query script.");
             Console.WriteLine(" run-launch-command [instructionPath] - Runs a Python launch command script with the specified instruction path.");
             Console.WriteLine(" setup-localdev - Sets up the local development environment with Anaconda."); // Add description for the new command
+            Console.WriteLine(" qodana-scan - Initiates a Qodana scan on the specified project directory.");
+            Console.WriteLine(" qodana-results - Displays the results of the most recent Qodana scan.");
             Console.WriteLine(" exit - Exits the application.");
         }
     }
