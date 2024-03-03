@@ -36,9 +36,59 @@ namespace Hydra
                 case "setup-localdev": 
                     CondaManager.SetupLocalDevEnvironment();
                     break;
+                
+                case "qodana-scan":
+                    RunQodanaScan();
+                    break;
+                
+                case "qodana-results":
+                    ShowQodanaResults();
+                    break;
+                
                 default:
                     Console.WriteLine("Unknown command.");
                     break;
+            }
+        }
+        
+        public static void RunQodanaScan()
+        {
+            var projectDir = _configuration["Qodana:ProjectDir"];
+            var resultsDir = _configuration["Qodana:ResultsDir"];
+            var linter = "jetbrains/dotnet:latest";
+            var scanRunner = new QodanaScanRunner(linter, projectDir, resultsDir);
+            var issues = scanRunner.RunScanAndGetIssuesWithCode();
+            Console.WriteLine("Qodana scan completed.");
+        }
+
+        public static void ShowQodanaResults()
+        {
+            var resultDir = _configuration["Qodana:ResultsDir"];
+            var resultsFilePath = Path.Combine(resultDir, "qodana-short.sarif.json");
+            var issues = new QodanaResultParser().ParseResults(resultsFilePath);
+
+            if (!issues.Any())
+            {
+                Console.WriteLine("No issues found.");
+                return;
+            }
+
+            Console.WriteLine("Qodana results summary:");
+
+
+            var issuesByType = issues.GroupBy(issue => issue.Type)
+                .Select(group => new { Type = group.Key, Count = group.Count() })
+                .OrderByDescending(group => group.Count);
+
+            foreach (var issueGroup in issuesByType)
+            {
+                Console.Write($"{issueGroup.Type}: {issueGroup.Count} issues");
+            }
+
+            Console.WriteLine("\nDetailed issues list:");
+            foreach ( var issue in issues)
+            {
+                Console.WriteLine($"Type: {issue.Type}, Description: {issue.Description}, File: {issue.FilePath}, Line: {issue.LineNumber}");
             }
         }
 
