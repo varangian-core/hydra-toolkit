@@ -5,6 +5,7 @@ obj/
 *.suo
 *.userosscache
 *.cache
+
 *.dbmdl
 *.dll
 *.exe
@@ -46,3 +47,8 @@ coverage/
 Thumbs.db
 *.swp
 *.swo
+
+
+QodanaResult/log/
+QodanaResult/projectStructure/
+QodanaResults/report/
